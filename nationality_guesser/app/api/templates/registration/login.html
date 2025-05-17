@@ -1,0 +1,168 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="auth-wrapper d-flex align-items-center justify-content-center">
+    <div class="auth-container">
+        <div class="auth-card card shadow-lg">
+            <!-- Логотип и заголовок -->
+            <div class="card-header bg-transparent text-center py-4">
+                <div class="auth-logo mb-3">
+                    <i class="bi bi-globe-americas text-primary" style="font-size: 2.5rem;"></i>
+                </div>
+                <h2 class="fw-bold text-primary">Nationality Guesser</h2>
+                <p class="text-muted mb-0">Sign in to your account</p>
+            </div>
+
+            <!-- Тело формы -->
+            <div class="card-body p-4 p-sm-5">
+                {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Login failed!</strong> Please check your username and password.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Поле username -->
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+                            <input
+                                type="text"
+                                name="username"
+                                class="form-control form-control-lg"
+                                id="id_username"
+                                placeholder="Enter your username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Поле password -->
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control form-control-lg"
+                                id="id_password"
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            <a href="#" class="text-decoration-none">Forgot password?</a>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка входа -->
+                    <div class="d-grid mb-3">
+                        <button class="btn btn-primary btn-lg fw-bold" type="submit">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                        </button>
+                    </div>
+
+                    <!-- Дополнительные опции -->
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Don't have an account?
+                            <a href="/admin/" class="text-decoration-none fw-bold">Contact administrator</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Футер карточки -->
+            <div class="card-footer bg-transparent text-center py-3">
+                <small class="text-muted">© {% now "Y" %} Nationality Guesser. All rights reserved.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Основные стили для страницы входа */
+    .auth-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .auth-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .auth-card .card-header {
+        border-bottom: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .auth-logo {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 50%;
+    }
+
+    .toggle-password {
+        cursor: pointer;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+</style>
+
+<script>
+    // Показать/скрыть пароль
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+        const passwordInput = document.getElementById('id_password');
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('bi-eye-fill');
+            icon.classList.add('bi-eye-slash-fill');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('bi-eye-slash-fill');
+            icon.classList.add('bi-eye-fill');
+        }
+    });
+
+    // Валидация формы
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

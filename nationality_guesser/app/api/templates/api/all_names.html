@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Основной контент -->
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0"><i class="bi bi-table me-2"></i>All Names Data</h2>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary me-2">
+                            <i class="bi bi-download me-1"></i>Export
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="bi bi-funnel me-1"></i>Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Requests</th>
+                                <th scope="col">Last Accessed</th>
+                                <th scope="col">Country</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">Probability</th>
+                                <th scope="col">Capital</th>
+                                <th scope="col">Flag</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name in names %}
+                            <tr>
+                                <td class="fw-bold">{{ name.name }}</td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill">{{ name.count }}</span>
+                                </td>
+                                <td class="last-accessed">
+                                    {% if name.last_accessed %}
+                                        <span class="text-muted">{{ name.last_accessed|date:"M d, Y H:i" }}</span>
+                                    {% else %}
+                                        <span class="text-muted">Never</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ name.country }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ name.country_code }}</span>
+                                </td>
+                                <td class="probability-cell
+                                    {% if name.probability > 0.7 %}probability-high
+                                    {% elif name.probability > 0.4 %}probability-medium
+                                    {% else %}probability-low
+                                    {% endif %}">
+                                    {{ name.probability|floatformat:2 }}
+                                </td>
+                                <td>{{ name.capital }}</td>
+                                <td>
+                                    {% if name.flag %}
+                                    <img src="{{ name.flag }}" alt="{{ name.country }} flag" class="flag-img rounded">
+                                    {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Пагинация -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="card-footer bg-white text-muted">
+                <div class="row">
+                    <div class="col-md-6">
+                        Showing <strong>1</strong> to <strong>{{ names|length }}</strong> of {{ names|length }} entries
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        Last updated: {% now "F j, Y H:i" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
